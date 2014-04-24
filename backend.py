@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template, abort
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, mapper
+import subprocess
 import sqlalchemy.exc
 import time
 import json
@@ -28,6 +29,7 @@ def main_site(path):
     if request.method == 'POST':
         session.add(db.Clients(mac = mac, time = time.time()))
         session.commit()
+        subprocess.call(['iptables', '-t mangle', '-I internet', '-m mac', '--mac-source', mac, '-j RETURN'])
         token = True;
     return render_template('toc.html', token = token)
 
