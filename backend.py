@@ -26,7 +26,7 @@ def main_site(path):
         abort(400)
     token = False;
     if request.method == 'POST':
-        session.add(mac = mac, time = time.time())
+        session.add(db.Clients(mac = mac, time = time.time()))
         session.commit()
         token = True;
     return render_template('toc.html', token = token)
