@@ -29,8 +29,8 @@ def main_site(path):
     if request.method == 'POST':
         session.add(db.Clients(mac = mac, time = time.time()))
         session.commit()
-        subprocess.call(['iptables', '-t mangle', '-I internet', '-m mac', '--mac-source', mac, '-j RETURN'])
-        token = True;
+        subprocess.call(['iptables', '-t', 'mangle', '-I', 'internet', '-m', 'mac', '--mac-source', mac, '-j','RETURN'])
+        token = True
     return render_template('toc.html', token = token)
 
 if __name__ ==  "__main__":
