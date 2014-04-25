@@ -44,5 +44,10 @@ class DB(object):
             self.session.delete(row)
         self.session.commit()
 
+    def getMACs(self):
+        res = self.session.query(tables.Clients.mac).all()
+        list = [e[0] for e in res]
+        return list
+
 if __name__ == '__main__':
         pass
