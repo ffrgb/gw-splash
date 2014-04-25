@@ -41,7 +41,7 @@ def main_site(path):
             print("An unexpected error occurred!!! Please handle with it!")
             raise
 
-    return render_template('toc.html', token = token, iptoken = iptoken, dbtoken = dbtoken)
+    return render_template('toc.html', token = token, iptoken = iptoken, dbtoken = dbtoken, url = request.url)
 
 if __name__ ==  "__main__":
     app.run(debug=True, host='0.0.0.0')
