@@ -24,6 +24,8 @@ class IPTables(object):
 
     def unlockMAC(self, mac):
         if not call(['iptables', '-t', 'mangle', '-I', self.chain, '-m', 'mac', '--mac-source', mac, '-j', 'RETURN']):
+            return True
+        else:
             return False
 
     def lockMAC(self, mac):
