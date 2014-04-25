@@ -26,12 +26,24 @@ def main_site(path):
     if not mac:
         abort(400)
     token = False;
+    iptoken = False
+    dbtoken = False
     if request.method == 'POST':
-        session.add(db.Clients(mac = mac, time = time.time()))
-        session.commit()
-        subprocess.call(['iptables', '-t', 'mangle', '-I', 'internet', '-m', 'mac', '--mac-source', mac, '-j','RETURN'])
         token = True
-    return render_template('toc.html', token = token)
+        try:
+            if (session.query(db.Clients).filter(db.Clients.mac == mac).first() == None):
+                session.add(db.Clients(mac = mac, time = time.time()))
+                session.commit()
+                if subprocess.call(['iptables', '-t', 'mangle', '-I', 'internet', '-m', 'mac', '--mac-source', mac, '-j','RETURN']) == 3:
+                    iptoken = True
+                    token = False
+            else:
+                token = False
+                dbtoken = True
+        except:
+            raise
+
+    return render_template('toc.html', token = token, iptoken = iptoken, dbtoken = dbtoken)
 
 if __name__ ==  "__main__":
     app.run(debug=True, host='0.0.0.0')
