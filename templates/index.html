@@ -15,7 +15,19 @@
     {% if token %}
     <div class="alert alert-success alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>Warning!</strong> Better check yourself, you're not looking too good.
+        <strong>Eintragung erfolgreich!</strong> Sie wurden soeben für die nächsten 12 Stunden freigeschaltet, danach müssen Sie diese Meldung wieder bestätigen.
+    </div>
+    {% endif %}
+    {% if iptoken %}
+    <div class="alert alert-warning alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Achtung!</strong> Eintragung fehlgeschlagen! Bitte versuchen Sie es in einigen Minuten erneut.
+    </div>
+    {% endif %}
+    {% if dbtoken %}
+    <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Wiederholte freischaltung!</strong> Sie sind bereits freigeschaltet und können unser Netz benutzen.
     </div>
     {% endif %}
     <div class="container-fluid spacer">
