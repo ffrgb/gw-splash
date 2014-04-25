@@ -29,7 +29,7 @@ def main_site(path):
     if request.method == 'POST':
         token = True
         try:
-            if db.checkRecordExists(mac):
+            if not db.checkRecordExists(mac):
                 db.addMAC(mac);
                 if not ipt.unlockMAC(mac):
                     iptoken = True
