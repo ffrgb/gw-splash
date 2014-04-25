@@ -44,8 +44,5 @@ def main_site(path):
     return render_template('toc.html', token = token, iptoken = iptoken, dbtoken = dbtoken)
 
 if __name__ ==  "__main__":
-    ipt.start()
-    ipt.unlockDNS('188.40.255.242')
-    ipt.unlockDNS('213.73.91.35')
     app.run(debug=True, host='0.0.0.0')
     ipt.shutdown()
