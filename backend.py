@@ -34,6 +34,8 @@ def main_site(path):
                 if not ipt.unlockMAC(mac):
                     iptoken = True
                     token = False
+                else:
+                    helper.rmtrack(request.remote_addr)
             else:
                 token = False
                 dbtoken = True
