@@ -46,5 +46,4 @@ def main_site(path):
     return render_template('toc.html', token = token, iptoken = iptoken, dbtoken = dbtoken, url = request.url)
 
 if __name__ ==  "__main__":
-    app.run(debug=True, host='0.0.0.0')
-    ipt.shutdown()
+    pass
