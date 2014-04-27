@@ -1,16 +1,48 @@
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, mapper
+import sqlalchemy.exc
+import tables
+import time
 
-engine = create_engine('sqlite:///clients.db')
-Base = declarative_base()
+class DB(object):
+    def __init__(self):
+        Session = sessionmaker(bind=tables.engine)
+        self.session = Session()
 
-class Clients(Base):
-    __tablename__ = 'clients'
+    def checkRecordExists(self, mac):
+        if not (self.session.query(tables.Clients).filter(tables.Clients.mac == mac).first() == None):
+            return True
+        else:
+            return False
 
-    clientID = Column(Integer, primary_key=True)
-    mac = Column(String, unique=True)
-    time = Column(String)
+    def addMAC(self, mac):
+        try:
+            self.session.add(tables.Clients(mac = mac, time = time.time()))
+            self.session.commit()
+        except:
+            raise
 
-# create tables
-Base.metadata.create_all(engine)
+    def rmMAC(self, mac):
+        try:
+            res = self.session.query(tables.Clients).filter(tables.Clients.mac == mac).one()
+            self.session.delete(res)
+            self.session.commit()
+        except:
+            raise
 
+    def getTimeDeltaForMAC(self, mac):
+        res = self.session.query(tables.Clients.time).filter(tables.Clients.mac == mac).scalar()
+        now = time.time()
+        return now - res
+
+    def removeOlderThan(self, minutes):
+        now = time.time()
+        sec = minutes*60
+        tdelta = now - sec
+        res = self.session.query(tables.Clients).filter(tables.Clients.time < tdelta)
+        for row in res:
+            self.session.delete(row)
+        self.session.commit()
+
+if __name__ == '__main__':
+        pass
