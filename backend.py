@@ -1,49 +1,49 @@
 from flask import Flask, request, jsonify, render_template, abort
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, mapper
 import subprocess
-import sqlalchemy.exc
-import time
-import json
 import re
-import db
+import db as database
+from iptables import IPTables
+from helper import Helper
 
 app = Flask(__name__)
 
-Session = sessionmaker(bind=db.engine)
-session = Session()
-
-def getMAC(ip):
-    with open('/proc/net/arp') as arp:
-        for line in arp:
-            if re.search(ip, line):
-                return line.split()[3]
+# create objects needed here
+ipt = IPTables()
+helper = Helper()
+db = database.DB()
 
 @app.route('/', methods=['GET', 'POST'], defaults={'path': ''})
 @app.route('/<path:path>', methods=['GET', 'POST'])
 def main_site(path):
-    mac = getMAC(request.remote_addr)
-    if not mac:
-        abort(400)
+    # set signal tokens for the webinterface
     token = False;
     iptoken = False
     dbtoken = False
+
+    # try to get MAC (doesn't work on localhost connection)
+    mac = helper.getMAC(request.remote_addr)
+    # and send an 400 error if there is no client mac in arp table (like for localhost)
+    if not mac:
+        abort(400)
+    # this is the code which runs if the client accepts the tos
     if request.method == 'POST':
         token = True
         try:
-            if (session.query(db.Clients).filter(db.Clients.mac == mac).first() == None):
-                session.add(db.Clients(mac = mac, time = time.time()))
-                session.commit()
-                if subprocess.call(['iptables', '-t', 'mangle', '-I', 'internet', '-m', 'mac', '--mac-source', mac, '-j','RETURN']) == 3:
+            if db.checkRecordExists(mac):
+                db.addMAC(mac);
+                if not ipt.unlockMAC(mac):
                     iptoken = True
                     token = False
             else:
                 token = False
                 dbtoken = True
         except:
+            print("An unexpected error occurred!!! Please handle with it!")
             raise
 
     return render_template('toc.html', token = token, iptoken = iptoken, dbtoken = dbtoken)
 
 if __name__ ==  "__main__":
+    ipt.start()
     app.run(debug=True, host='0.0.0.0')
+    ipt.shutdown()
