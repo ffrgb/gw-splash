@@ -5,9 +5,12 @@ import db as database
 db = database.DB()
 ipt = IPTables()
 
+dns1 = '188.40.255.242'
+dns2 = '213.73.91.35'
+
 ipt.start()
-ipt.unlockDNS('188.40.255.242')
-ipt.unlockDNS('213.73.91.35')
+ipt.unlockDNS(dns1)
+ipt.unlockDNS(dns2)
 
 db.removeOlderThan(720)
 for mac in db.getMACs():
