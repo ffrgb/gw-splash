@@ -10,6 +10,11 @@ body {
     margin-top: 3%;
 }
 
+.panel{
+    box-shadow: 6px 5px 15px rgba(0,0,0,0.2);
+    -webkit-box-shadow: 6px 5px 15px rgba(0,0,0,0.2);
+}
+
 .panel-primary {
     border-color: #dc0067;
 }
@@ -17,4 +22,12 @@ body {
 .panel-primary > .panel-heading {
     border-color: #dc0067;
     background-color: #dc0067;
+}
+
+.list-group-item {
+    border: none;
+}
+
+.longterm {
+    margin-left: 15px !important;
 }
