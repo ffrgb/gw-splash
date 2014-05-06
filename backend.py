@@ -16,7 +16,7 @@ db = database.DB()
 @app.route('/<path:path>', methods=['GET', 'POST'])
 def main_site(path):
     # set signal tokens for the webinterface
-    token = False;
+    token = False
     iptoken = False
     dbtoken = False
 
@@ -30,7 +30,7 @@ def main_site(path):
         token = True
         try:
             if not db.checkRecordExists(mac):
-                db.addMAC(mac);
+                db.addMAC(mac, longterm=('longterm' in request.form))
                 if not ipt.unlockMAC(mac):
                     iptoken = True
                     token = False

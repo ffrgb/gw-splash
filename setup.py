@@ -12,6 +12,6 @@ ipt.start()
 ipt.unlockDNS(dns1)
 ipt.unlockDNS(dns2)
 
-db.removeOlderThan(720)
+db.removeExpired()
 for mac in db.getMACs():
     ipt.unlockMAC(mac)

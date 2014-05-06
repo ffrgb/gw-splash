@@ -10,6 +10,7 @@ class Clients(Base):
     clientID = Column(Integer, primary_key=True)
     mac = Column(String, unique=True)
     time = Column(Float)
+    expire = Column(Float)
 
 # create tables
 Base.metadata.create_all(engine)

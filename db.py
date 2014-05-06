@@ -15,9 +15,10 @@ class DB(object):
         else:
             return False
 
-    def addMAC(self, mac):
+    def addMAC(self, mac, longterm=False):
         try:
-            self.session.add(tables.Clients(mac = mac, time = time.time()))
+            expire = time.time() + 3600 * (24 * 90 if longterm else 12)
+            self.session.add(tables.Clients(mac=mac, time=time.time(), expire=expire))
             self.session.commit()
         except:
             raise
@@ -30,19 +31,17 @@ class DB(object):
         except:
             raise
 
-    def getTimeDeltaForMAC(self, mac):
-        res = self.session.query(tables.Clients.time).filter(tables.Clients.mac == mac).scalar()
+    def removeExpired(self):
         now = time.time()
-        return now - res
-
-    def removeOlderThan(self, minutes):
-        now = time.time()
-        sec = minutes*60
-        tdelta = now - sec
-        res = self.session.query(tables.Clients).filter(tables.Clients.time < tdelta)
+        res = self.session.query(tables.Clients).filter(tables.Clients.expire < now)
         for row in res:
             self.session.delete(row)
         self.session.commit()
+
+    def getExpiredMACs(self):
+        now = time.time()
+        res = self.session.query(tables.Clients).filter(tables.Clients.expire < now)
+        return res
 
     def getMACs(self):
         res = self.session.query(tables.Clients.mac).all()
