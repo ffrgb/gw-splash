@@ -40,8 +40,9 @@ class DB(object):
 
     def getExpiredMACs(self):
         now = time.time()
-        res = self.session.query(tables.Clients).filter(tables.Clients.expire < now)
-        return res
+        res = self.session.query(tables.Clients).filter(tables.Clients.expire < now).all()
+        list = [e[0] for e in res]
+        return list
 
     def getMACs(self):
         res = self.session.query(tables.Clients.mac).all()
