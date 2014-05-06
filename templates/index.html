@@ -15,7 +15,7 @@
     {% if token %}
     <div class="alert alert-success alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>Eintragung erfolgreich!</strong> Sie wurden soeben für die nächsten 12 Stunden freigeschaltet, danach müssen Sie diese Meldung wieder bestätigen. Wir leiten Sie jetzt nach {{ url }} um!
+        <strong>Eintragung erfolgreich!</strong> Sie wurden soeben freigeschaltet. Wir leiten Sie jetzt nach {{ url }} um!
         <script>window.setTimeout('window.location = "{{ url }}"',3000);</script>
     </div>
     {% endif %}
