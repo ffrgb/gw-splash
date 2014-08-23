@@ -52,8 +52,10 @@ class IPTables(object):
         self.__shutdown('ip6tables', self.destinationv6)
 
     def unlockMAC(self, mac):
-        self.__unlockMAC('iptables', mac)
-        self.__unlockMAC('ip6tables', mac)
+        if self.__unlockMAC('iptables', mac) and self.__unlockMAC('ip6tables', mac):
+            return True
+        else:
+            return False
 
     def lockMAC(self, mac):
         self.__lockMAC('iptables', mac)
