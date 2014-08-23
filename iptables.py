@@ -34,11 +34,11 @@ class IPTables(object):
             return True
         else:
             return False
-    def unlockDNS(self, iptables, ip):
+    def unlockDNS(self, ip):
         if not call(['iptables', '-t', 'mangle', '-I', self.chain, '-d', ip, '-j', 'RETURN']):
             return False
 
-    def unlockDHCP(self, optables, ip):
+    def unlockDHCP(self, ip):
         if not call(['iptables', '-t', 'mangle', '-I', self.chain, '-d', ip, '-p udp', '--dport', '67:68', '--sport', '67:68', '-j', 'RETURN']):
             return False
 
