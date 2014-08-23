@@ -13,7 +13,8 @@ class IPTables(object):
         call([iptables, '-N', self.chain, '-t', 'mangle'])
         call([iptables, '-t', 'mangle', '-A', 'PREROUTING', '-i', self.iface, '-j', self.chain])
         call([iptables, '-t', 'mangle', '-A', self.chain, '-j', 'MARK', '--set-mark', self.mark])
-        call([iptables, '-t', 'nat', '-A', 'PREROUTING', '-i',self.iface , '-m', 'mark', '--mark', self.mark, '-p', 'tcp', '--dport', '80', '-j', 'DNAT', '--to-destination', destination+':'+self.port])
+        if iptables not 'ip6tables':
+            call([iptables, '-t', 'nat', '-A', 'PREROUTING', '-i',self.iface , '-m', 'mark', '--mark', self.mark, '-p', 'tcp', '--dport', '80', '-j', 'DNAT', '--to-destination', destination+':'+self.port])
         call([iptables, '-t', 'filter', '-A', 'FORWARD', '-m', 'mark', '--mark', self.mark, '-j', 'DROP'])
 
     def __shutdown(self, iptables, destination):
@@ -21,7 +22,8 @@ class IPTables(object):
         call([iptables, '-t', 'mangle', '-F', self.chain])
         call([iptables, '-t', 'mangle', '-X', self.chain])
         call([iptables, '-t', 'filter', '-D', 'FORWARD', '-m', 'mark', '--mark', self.mark, '-j', 'DROP'])
-        call([iptables, '-t', 'nat', '-D', 'PREROUTING', '-i',self.iface , '-m', 'mark', '--mark', self.mark, '-p', 'tcp', '--dport', '80', '-j', 'DNAT', '--to-destination', destination+':'+self.port])
+        if iptables not 'ip6tables':
+            call([iptables, '-t', 'nat', '-D', 'PREROUTING', '-i',self.iface , '-m', 'mark', '--mark', self.mark, '-p', 'tcp', '--dport', '80', '-j', 'DNAT', '--to-destination', destination+':'+self.port])
 
     def __unlockMAC(self, iptables, mac):
         if not call([iptables, '-t', 'mangle', '-I', self.chain, '-m', 'mac', '--mac-source', mac, '-j', 'RETURN']):
