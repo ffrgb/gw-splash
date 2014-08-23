@@ -3,7 +3,7 @@ from subprocess import call
 class IPTables(object):
     def __init__(self):
         self.destination = '10.142.0.1'
-        self.destinationv6 = '2a01:4f8:100:57ff::1'
+        self.destinationv6 = '[2a01:4f8:100:57ff::1]'
         self.port = '5000'
         self.mark = '99'
         self.chain = 'portal'
