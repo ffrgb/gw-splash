@@ -31,3 +31,12 @@ body {
 .longterm {
     margin-left: 15px !important;
 }
+
+.modal-header {
+    background: #dc0067;
+    color: #fff;
+}
+
+.impressum:hover {
+    color: #cccccc;
+}
